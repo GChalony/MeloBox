@@ -1,0 +1,21 @@
+import RPi.GPIO as GPIO
+from time import sleep
+
+BLUE_CHANNEL = 11
+RED_CHANNEL = 13
+GREEN_CHANNEL = 15
+
+pins = [BLUE_CHANNEL, RED_CHANNEL, GREEN_CHANNEL]
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(pins, GPIO.OUT, initial=GPIO.LOW)
+
+GPIO.output(RED_CHANNEL, GPIO.HIGH)
+sleep(1)
+GPIO.output(RED_CHANNEL, GPIO.LOW)
+GPIO.output(BLUE_CHANNEL, GPIO.HIGH)
+sleep(1)
+GPIO.output(BLUE_CHANNEL, GPIO.LOW)
+GPIO.output(GREEN_CHANNEL, GPIO.HIGH)
+sleep(1)
+GPIO.cleanup()
