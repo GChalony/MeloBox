@@ -6,6 +6,15 @@ A good tutorial of how to setup PN532 with Raspberry Pi : https://blog.stigok.co
 i2cdetect -y 1
 ```
 
+A nice tool to control spotify through the Web API (cli interface) : [spotify-cli](https://github.com/ledesmablt/spotify-cli).  
+Example:
+```shell
+spotify play --uri spotify:album:5JY3b9cELQsoG7D5TJMOgw
+spotify toggle
+spotify next
+```
+
+
 TODOs :
  - led quand detecté
  - boutons next / pause / previous
