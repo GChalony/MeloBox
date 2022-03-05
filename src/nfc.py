@@ -1,9 +1,9 @@
 class NFCReader:
-    def wait_for_tag():
+    def wait_for_tag(self):
         pass
 
-    def read_tag():
+    def read_tag(self):
         pass
 
-    def wait_for_tag_removed():
+    def wait_for_tag_removed(self):
         pass

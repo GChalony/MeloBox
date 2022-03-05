@@ -71,8 +71,7 @@ def waitForTagRemoved():
 if __name__ == "__main__":
     print("Starting...")
     if setupNFC():
-        with open(FIFO_NAME, "w") as fifo:
-            while True:
-                content = readNFC()
-                fifo.write(content)
-                waitForTagRemoved()
+        while True:
+            content = readNFC()
+            print("Read", content)
+            waitForTagRemoved()
