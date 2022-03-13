@@ -21,6 +21,7 @@ hardware.pause_button.register_callback(spotify.toggle)
 try:
     while True:
         hardware.nfc_reader.wait_for_tag()
+        print("Tag!")
         hardware.led.turn_on(0, 0, 255)
         uri = hardware.nfc_reader.read_tag()
         if uri is not None:
