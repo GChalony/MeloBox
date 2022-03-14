@@ -5,6 +5,18 @@
 
 #include <stdlib.h>
 #include <nfc/nfc.h>
+#include <freefare.h>
+
+
+// Allocate only a pointer to nfc_context
+nfc_context *context;
+
+
+void error(char * reason) {
+  printf(reason);
+  nfc_exit(context);
+  exit(1);
+}
 
 static void
 print_hex(const uint8_t *pbtData, const size_t szBytes)
@@ -74,20 +86,33 @@ void poll(nfc_context * context, nfc_device * pnd, nfc_target * nt) {
   }
 }
 
-void readNDEF(nfc_context * context) {
-  nfc_connstring devices[8];
-  int n = nfc_list_devices(context, devices, 8);
-  printf("Found %d devices\n", n);
-}
+void readNDEF(nfc_context * context, nfc_device * nd) {
+  printf("Reading NDEF\n");
+  FreefareTag * tags = freefare_get_tags(nd);
+  if (tags == NULL) {
+    error("Couldn't get tags\n");
+  }
+  printf("UP");
+  FreefareTag tag = tags[0];
+  char* uid = freefare_get_tag_uid(tag);
+  printf("Tag UUID: %s\n", uid);
+  int type = freefare_get_tag_type(tag);
+  printf("Tag type %d\n", type);
 
+  // Read MAD
+  if (mifare_classic_connect(tag) > 0) {
+    error("Couldn't connect to tag\n");
+  }
+  Mad mad = mad_read(tag);
+  
+
+  freefare_free_tags(tags);
+}
 
 int main(int argc, const char *argv[]) {
   printf("STARTED\n");
   nfc_device *pnd;
   nfc_target nt;
-
-  // Allocate only a pointer to nfc_context
-  nfc_context *context;
 
   // Initialize libnfc and set the nfc_context
   nfc_init(&context);
@@ -106,7 +131,7 @@ int main(int argc, const char *argv[]) {
   //   - first specified device in libnfc.conf (/etc/nfc) or
   //   - first specified device in device-configuration directory (/etc/nfc/devices.d) or
   //   - first auto-detected (if feature is not disabled in libnfc.conf) device
-  pnd = nfc_open(context, NULL);
+  pnd = nfc_open(context, "pn532_i2c:/dev/i2c-1");
 
   if (pnd == NULL) {
     printf("ERROR: %s\n", "Unable to open NFC device.");
@@ -127,7 +152,7 @@ int main(int argc, const char *argv[]) {
   // Polling
   //poll(context, pnd, &nt);
 
-  readNDEF(context);
+  readNDEF(context, pnd);
 
   
   // Close NFC device
