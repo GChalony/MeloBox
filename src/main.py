@@ -18,6 +18,7 @@ hardware.pause_button.register_callback(spotify.toggle)
 # Tag reading loop
 try:
     while True:
+        print("Waiting for tag")
         hardware.led.turn_on(255, 0, 0)
         hardware.nfc_reader.wait_for_tag()
         print("Tag!")

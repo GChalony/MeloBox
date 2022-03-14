@@ -2,15 +2,9 @@ from nfc import NFCReader
 import RPi.GPIO as GPIO
 from time import sleep
 
+from pinout import *
+
 GPIO.setmode(GPIO.BOARD)
-
-BLUE_CHANNEL = 11
-RED_CHANNEL = 13
-GREEN_CHANNEL = 15
-
-PREV_BUTTON_PIN = 36  # GPIO 16
-NEXT_BUTTON_PIN = 32  # GPIO 12
-PAUSE_BUTTON_PIN = 37 # GPIO 26
 
 # TODO PWM doesn't seem to work
 
