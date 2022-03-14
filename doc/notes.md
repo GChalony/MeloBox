@@ -84,3 +84,9 @@ The complete list of commands can be found at p65 in the User Manual (chapter 7 
 
 
 DEP Protocol ???
+
+## libnfc
+
+Config : dans `/etc/nfc/libnfc.conf` ou `/usr/local/etc/nfc/libnfc.conf`
+
+[Quelques détails pour l'installation](https://github.com/nfc-tools/libnfc/issues/534)
