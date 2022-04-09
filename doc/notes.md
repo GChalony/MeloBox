@@ -90,3 +90,11 @@ DEP Protocol ???
 Config : dans `/etc/nfc/libnfc.conf` ou `/usr/local/etc/nfc/libnfc.conf`
 
 [Quelques détails pour l'installation](https://github.com/nfc-tools/libnfc/issues/534)
+
+## FreeCAD
+
+[Un bon tuto pour designer une boite de rpi](https://www.framboise314.fr/un-boitier-de-raspberry-pi-4-avec-freecad/)
+
+## Power up / down
+
+[Raspberry Pi Power-Up and Shutdown with a Physical Button](https://embeddedcomputing.com/technology/open-source/development-kits/raspberry-pi-power-up-and-shutdown-with-a-physical-button)
