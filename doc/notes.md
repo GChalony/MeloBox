@@ -98,3 +98,15 @@ Config : dans `/etc/nfc/libnfc.conf` ou `/usr/local/etc/nfc/libnfc.conf`
 ## Power up / down
 
 [Raspberry Pi Power-Up and Shutdown with a Physical Button](https://embeddedcomputing.com/technology/open-source/development-kits/raspberry-pi-power-up-and-shutdown-with-a-physical-button)
+
+## Raspberry Pi setup
+
+Disable random address: 
+```shell
+printf "[connection]\nwifi.mac-address-randomization=1\n\n[device]\nwifi.scan-rand-mac-address=no\n" | sudo tee /etc/NetworkManager/conf.d/100-disable-wifi-mac-randomization.conf
+```
+[Source](https://raspberrypi.stackexchange.com/questions/68513/pi-using-a-random-mac-address-after-every-reboot-how-do-i-stop-this-behavior)
+
+## Spotifyd
+
+[Setup de systemd](https://spotifyd.github.io/spotifyd/installation/Raspberry-Pi.html)
