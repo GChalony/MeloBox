@@ -3,7 +3,9 @@ Description=A music player which reads NFC tags to play music
 Wants=spotifyd.service
 
 [Service]
-ExecStart=/usr/bin/python3 /home/pi/Documents/Greg/BoomBox/src/main.py
+User=pi
+ExecStart=/home/pi/Documents/Greg/BoomBox/src/main.py
+WorkingDirectory=/home/pi/Documents/Greg/BoomBox
 Restart=on-failure
 
 [Install]
