@@ -1,7 +1,7 @@
 from time import sleep
 from RPi import GPIO
 
-from pinout import POWER_LED
+POWER_LED = 19
 
 GPIO.setmode(GPIO.BOARD)
 
