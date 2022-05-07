@@ -1,4 +1,4 @@
-#/usr/bin/python3
+#!/usr/bin/python3
 
 from hardware import Hardware, get_uri
 from spotify_interface import SpotifyInterface
