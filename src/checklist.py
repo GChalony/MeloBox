@@ -40,7 +40,7 @@ checklist.append(test_output_pin(BLUE_CHANNEL, "BLUE LED"))
 checklist.append(test_output_pin(POWER_LED, "Power LED"))
 
 # Power button
-checklist.append(test_button_low(POWER_BUTTON, "Power button"))
+#checklist.append(test_button_low(POWER_BUTTON, "Power button"))
 
 # Player buttons
 checklist.append(test_button_low(PREV_BUTTON_PIN, "Previous button"))

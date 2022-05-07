@@ -11,5 +11,5 @@ PAUSE_BUTTON_PIN = 36 # GPIO 26
 INTERRUPT_PIN = 7  # GPIO 4
 
 # Power button
-POWER_LED = 3         # GPIO 2
+POWER_LED = 19        # GPIO 10
 POWER_BUTTON = 5      # GPIO 3

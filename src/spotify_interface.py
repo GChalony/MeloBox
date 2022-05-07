@@ -9,6 +9,7 @@ class SpotifyInterface:
     
     def _spotify(self, command):
         arg = ["spotify"] + command.split(" ")
+        print("$", " ".join(arg))
         subprocess.run(arg)
     
     @log
