@@ -1,5 +1,9 @@
+#/usr/bin/python3
+
 from hardware import Hardware, get_uri
 from spotify_interface import SpotifyInterface
+import signal
+
 
 spotify = SpotifyInterface()
 spotify.setup()
@@ -9,6 +13,13 @@ spotify.setup()
 hardware = Hardware()
 hardware.setup()
 
+# Catch SIGTERM signal to cleanup
+def cleanup():
+    print("See ya!")
+    hardware.cleanup()
+    spotify.pause()
+
+signal.signal(signal.SIGTERM, cleanup)
 
 # Connect hardware with spotify
 hardware.next_button.register_callback(spotify.next)
@@ -31,6 +42,4 @@ try:
         hardware.nfc_reader.wait_for_tag_removed()
         spotify.pause()
 finally:
-    print("See ya!")
-    hardware.cleanup()
-    spotify.pause()
+    cleanup()
