@@ -112,3 +112,13 @@ printf "[connection]\nwifi.mac-address-randomization=1\n\n[device]\nwifi.scan-ra
 [Setup de systemd](https://spotifyd.github.io/spotifyd/installation/Raspberry-Pi.html)
 [Tuto de systemd](https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files)
 [Repo de spotify cli](https://github.com/ledesmablt/spotify-cli)
+
+## Funko Pop! figurines
+ - AC/DC
+ - Freddie Mercury
+ - Green Day
+ - Aerosmith
+ - Kiss
+ - Jimmy Hendrix
+ - Beatles
+ - The Police
