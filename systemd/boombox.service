@@ -1,10 +1,13 @@
 [Unit]
 Description=A music player which reads NFC tags to play music
 Wants=spotifyd.service
+After=spotifyd.service
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 User=pi
-ExecStart=/home/pi/Documents/Greg/BoomBox/src/main.py
+ExecStart=/home/pi/Documents/Greg/BoomBox/boombox
 WorkingDirectory=/home/pi/Documents/Greg/BoomBox
 Restart=on-failure
 
