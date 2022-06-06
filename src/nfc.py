@@ -16,6 +16,9 @@ class NFCReader:
                 uri = data[start + 2: end].decode("utf-8")
                 print("Received ", data[start + 2: end])
 
+                # Support shorten URI
+                if uri.startswith("spt:"):
+                    uri = uri.replace("spt:", "spotify:")
                 if uri.startswith("spotify:"):
                     return uri
                 else:
