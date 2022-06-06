@@ -109,13 +109,13 @@ class Hardware:
         GPIO.cleanup()
 
     def button_pressed(self):
-        self.previous_led_color = self.led.color
-        print("button pressed", self.previous_led_color)
+        print("button pressed")
         self.led.turn_on(*self.BUTTON_PRESSED_COLOR)
 
     def button_released(self):
-        print("Restoring led", self.previous_led_color)
-        self.led.turn_on(*self.previous_led_color)
+        led_color = self.TAG_DETECTED_COLOR if self.nfc_reader.tag_connected else self.NO_TAG_COLOR
+        print("Restoring led", self.nfc_reader.tag_connected, led_color)
+        self.led.turn_on(*led_color)
 
 
 if __name__ == "__main__":

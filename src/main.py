@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from hardware import Hardware, get_uri
+from hardware import Hardware
 from spotify_interface import SpotifyInterface
 import signal
 

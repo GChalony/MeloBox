@@ -3,9 +3,12 @@ from time import sleep
 
 class NFCReader:
     CARD_DUMP = "card.mfd"
+    tag_connected = False
+
     def wait_for_tag(self):
-        while self._call_nfc_mfutltralight().returncode != 0:
+        while not self.is_tag_connected():
             sleep(0.1)
+        self.tag_connected = True
 
     def read_tag(self):
         with open(NFCReader.CARD_DUMP, "rb") as f:
@@ -28,9 +31,15 @@ class NFCReader:
                 return None
 
     def wait_for_tag_removed(self):
-        while self._call_nfc_mfutltralight().returncode == 0:
+        while self.is_tag_connected():
             sleep(0.1)
-        
+        print("Tag removed")
+        self.tag_connected = False
+    
+
+    def is_tag_connected(self):
+        return self._call_nfc_mfutltralight().returncode == 0
+
     def _call_nfc_mfutltralight(self):
         return subprocess.run(["nfc-mfultralight", "r", NFCReader.CARD_DUMP], 
                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
