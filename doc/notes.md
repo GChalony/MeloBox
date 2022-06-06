@@ -107,6 +107,8 @@ printf "[connection]\nwifi.mac-address-randomization=1\n\n[device]\nwifi.scan-ra
 ```
 [Source](https://raspberrypi.stackexchange.com/questions/68513/pi-using-a-random-mac-address-after-every-reboot-how-do-i-stop-this-behavior)
 
-## Spotifyd
+## Spotify
 
 [Setup de systemd](https://spotifyd.github.io/spotifyd/installation/Raspberry-Pi.html)
+[Tuto de systemd](https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files)
+[Repo de spotify cli](https://github.com/ledesmablt/spotify-cli)
