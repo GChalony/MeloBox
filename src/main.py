@@ -4,17 +4,21 @@ from hardware import Hardware, get_uri
 from spotify_interface import SpotifyInterface
 import signal
 
+print("Starting Boombox!")
 
 spotify = SpotifyInterface()
 spotify.setup()
 
+print("Spotify setup")
 #spotify.play("spotify:playlist:37i9dQZF1DWWF3yivn1m3D")
 
 hardware = Hardware()
 hardware.setup()
 
+print("Hardware setup")
+
 # Catch SIGTERM signal to cleanup
-def cleanup():
+def cleanup(*args):
     print("See ya!")
     hardware.cleanup()
     spotify.pause()
