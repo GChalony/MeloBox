@@ -7,7 +7,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-ExecStart=/home/pi/Documents/Greg/BoomBox/bin/spotifyd --no-daemon
+ExecStart=/home/pi/Documents/Greg/BoomBox/bin/spotifyd --no-daemon --debug-credentials --config-path '/home/pi/.config/spotifyd/spotifyd.conf'
 Restart=always
 RestartSec=12
 
