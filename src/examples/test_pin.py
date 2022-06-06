@@ -1,7 +1,7 @@
 from time import sleep
 from RPi import GPIO
 
-PIN = 5
+PIN = 7
 
 GPIO.setmode(GPIO.BOARD)
 
