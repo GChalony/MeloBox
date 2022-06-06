@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My New Hugo Site</title>
+    <link>http://example.org/</link>
+    <description>Recent content on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 23 May 2022 22:58:14 +0200</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The MelodyBox</title>
+      <link>http://example.org/posts/my-first-post/</link>
+      <pubDate>Mon, 23 May 2022 22:58:14 +0200</pubDate>
+      
+      <guid>http://example.org/posts/my-first-post/</guid>
+      <description>The MelodyBox is meant to give a physical existence to music, as used to exist with vinyls and CDs. The idea is simply to use a small NFC tag which will identify the music that should be played, and to have some kind of reader to read this ID and play the corresponding music.
+Whet is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn&amp;rsquo;t intefere with the radiowaves used to read it.</description>
+    </item>
+    
+  </channel>
+</rss>
