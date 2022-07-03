@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>My New Hugo Site</title>
+    <title>MelodyBox - an NFC Spotify player</title>
     <link>https://gchalony.github.io/MeloBox/</link>
-    <description>Recent content on My New Hugo Site</description>
+    <description>Recent content on MelodyBox - an NFC Spotify player</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 23 May 2022 22:58:14 +0200</lastBuildDate><atom:link href="https://gchalony.github.io/MeloBox/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,8 @@
       <pubDate>Mon, 23 May 2022 22:58:14 +0200</pubDate>
       
       <guid>https://gchalony.github.io/MeloBox/posts/melodybox/</guid>
-      <description>The MelodyBox is meant to give a physical existence to music, as used to exist with vinyls and CDs. The idea is simply to use a small NFC tag which will identify the music that should be played, and to have some kind of reader to read this ID and play the corresponding music.
+      <description>The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :
+ a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a rasperryPi.
 What is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn&amp;rsquo;t intefere with the radiowaves used to read it.</description>
     </item>
     
