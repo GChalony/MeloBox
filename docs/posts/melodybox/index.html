@@ -9,7 +9,7 @@
 
   <title>The MelodyBox - MelodyBox - an NFC Spotify player</title>
   <meta name="description" content="The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :
- a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a rasperryPi.
+ a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.
 What is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn&rsquo;t intefere with the radiowaves used to read it."><script type="application/ld+json">
 {
     "@context": "http://schema.org",
@@ -58,9 +58,9 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
     "name" : ""
   },
   "headline": "The MelodyBox",
-  "description" : "The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :\n a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a rasperryPi.\nWhat is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn\u0026rsquo;t intefere with the radiowaves used to read it.",
+  "description" : "The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :\n a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.\nWhat is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn\u0026rsquo;t intefere with the radiowaves used to read it.",
   "inLanguage" : "en",
-  "wordCount":  626 ,
+  "wordCount":  1650 ,
   "datePublished" : "2022-05-23T22:58:14",
   "dateModified" : "2022-05-23T22:58:14",
   "image" : "https:\/\/gchalony.github.io\/MeloBox\/",
@@ -81,7 +81,7 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
 
 <meta property="og:title" content="The MelodyBox" />
 <meta property="og:description" content="The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :
- a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a rasperryPi.
+ a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.
 What is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn&rsquo;t intefere with the radiowaves used to read it.">
 <meta property="og:url" content="https://gchalony.github.io/MeloBox/posts/melodybox/" />
 <meta property="og:type" content="website" />
@@ -224,19 +224,90 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
 <li>a physical object that can identifying music</li>
 <li>a reader which can read the music to play from the object and play it</li>
 </ul>
-<p>The object is an NFC tag, and the reader is an NFC reader coupled with a rasperryPi.</p>
+<p>The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.</p>
 <p>What is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn&rsquo;t intefere with the radiowaves used to read it. I have used floppy disks, a RubiksCube and Pop! figurines as such vectors.</p>
 <p>The music is played through the spotify API, which has several advantages: any music on Spotify can be played (without having to download it locally first), we can create custom playlists to play and the playback can be controled from other Spotify devices, for example to change the volume or pause.</p>
 <h2 id="final-result">Final result</h2>
+<p>Here&rsquo;s a demo of the result.</p>
+<p>Freddy Mercury plays Queen music. The buttons can be used to pause/play, go to the next or the previous music. LEDs indicate whether a tag is detected or not, when a button is pressed etc&hellip;</p>
 <h2 id="how-it-works">How it works</h2>
 <p>Alright, we know what we want to do, let&rsquo;s build it.</p>
 <p>The first thing we need is to be able to play music.</p>
-<p>pulseaudio, alsa
-speakers, ampli, carte son</p>
-<p>spotify
-spotifyd
-Spotify Web API
-Interface : spotify-cli, MPRIS</p>
+<p>We&rsquo;ll be using a RaspberryPi for this project. Indeed, we need a small enough board that it&rsquo;ll fit in a box, and it needs some pretty advanced features like connecting to spotify over the network or connecting to a NFC sensor. We could usea microcontroller, but it&rsquo;d be so much work to add a network chip and all, while we get all that for free on a Pi.<br>
+Also, as it&rsquo;s linux, we&rsquo;ll be able to use all the awesome tools that other people built for us!</p>
+<blockquote>
+<p>Disclaimer: we&rsquo;ll go through quite a few topics here, but I am by no means an expert. And though I&rsquo;ll try to give an overview of the technologies we&rsquo;ll manipulate, I&rsquo;m more interested in <em>how to use them</em> rather than <em>how they work</em>. I&rsquo;ve left tons of ressources at the end if you want to go deeper.</p>
+</blockquote>
+<h3 id="playing-sound">Playing sound</h3>
+<p>First of, we need speakers and to connect them to a Pi in a way that sound can be played. There are several ways to do that (passive / active speakers, different connectors, external sound card etc&hellip;) but we&rsquo;ll go for the simplest:</p>
+<ul>
+<li>two passive speakers are connected to an amplifier, which provides power and sound directly (so they don&rsquo;t need to be connected to the sector)</li>
+<li>the amplifier has a power input (sector) and can take several input types, both digital and analogic</li>
+<li>the Pi&rsquo;s internal sound card convert digital sound to analogic, which is then forwarded to the ampli over a jack port</li>
+</ul>
+<p><em>scheme</em></p>
+<p>To test the setup, just run <code>speaker-test</code> and check that the speakers are playing a nice white noise (perfect to go to sleep).</p>
+<h3 id="sound-architecture-in-linux">Sound architecture in linux</h3>
+<p>Playing sound on linux is not as straightforward as sending the digital data directly to the DAC (Digital-to-Analog-Converter, i.e. the sound card). All harware is usually handled by the kernel, so we need a way to ask the kernel to play sound.<br>
+The prime interface is called ALSA, for <a href="https://en.wikipedia.org/wiki/Advanced_Linux_Sound_Architecture">Advanced Linux Sound Architecture</a>. Application can send data they want to play to ALSA, and it will take care of it, optionnaly mixing multiple inputs (if you&rsquo;re playing both Youtube and Spotify).<br>
+Here are a few commands to poke around:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># List all outputs available</span>
+</span></span><span style="display:flex;"><span>$ aplay -L
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>jack
+</span></span><span style="display:flex;"><span>    JACK Audio Connection Kit
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Play a WAV file</span>
+</span></span><span style="display:flex;"><span>$ aplay some_music.wav
+</span></span><span style="display:flex;"><span>... plays
+</span></span></code></pre></div><p>However, ALSA is now rarely directly used, as it was replaced by <a href="https://en.wikipedia.org/wiki/PulseAudio">PulseAudio</a> as the interface to applications. PulseAudio runs as a background process (the server), and offers a much more powerful interface for applications to play sound : volume control per application, multiple outputs, a nice daemon to control its settings etc&hellip; PulseAudio builds on top of ALSA, but also registers as an ALSA device, which is why a PulseAudio entry is listed in <code>aplay -L</code> output.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># List available outputs</span>
+</span></span><span style="display:flex;"><span>$ pactl list sinks
+</span></span><span style="display:flex;"><span>Sink <span style="color:#75715e">#0</span>
+</span></span><span style="display:flex;"><span>	State: SUSPENDED
+</span></span><span style="display:flex;"><span>	Name: alsa_output.platform-bcm2835_audio.analog-stereo
+</span></span><span style="display:flex;"><span>	Description: Built-in Audio Analog Stereo
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Play a WAV file</span>
+</span></span><span style="display:flex;"><span>$ pacat some_music.wav
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># List applications currently playing sound</span>
+</span></span><span style="display:flex;"><span>$ pactl list sink-inputs | grep application.name
+</span></span><span style="display:flex;"><span>application.name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;speech-dispatcher-dummy&#34;</span>
+</span></span><span style="display:flex;"><span>module-stream-restore.id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sink-input-by-application-name:speech-dispatcher-dummy&#34;</span>
+</span></span><span style="display:flex;"><span>application.name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;pacat&#34;</span>
+</span></span><span style="display:flex;"><span>module-stream-restore.id <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;sink-input-by-application-name:pacat&#34;</span>
+</span></span></code></pre></div><p>Alright, we now know how to play music locally. However, our goal is to use spotify so that we can play almost any music, rather than only what I have on my computer.</p>
+<h3 id="playing-with-spotify">Playing with Spotify</h3>
+<p>Playing music through spotify requires two things : a client and a controller. The client is in charge of receiving the music data from spotify and playing it locally (through PulseAudio as we&rsquo;ve just seen). The controller is in charge of - you guessed it - controlling the music to play.</p>
+<p>The official spotify client is provided by Spotify, that&rsquo;s the full desktop app we&rsquo;re used to. However, that&rsquo;s not very convenient for an embedded system as the pi : it requires a whole desktop to be installed just to run an app.<br>
+Which is why some amazing people have built <a href="https://github.com/Spotifyd/spotifyd">spotifyd</a>, which is a lightweight spotify client (it builds on <a href="https://github.com/librespot-org/librespot">librespot</a> which is the actual client). Follow the instructions on their repo to install it locally. I chose to build it manually, I&rsquo;ll explain why later.<br>
+Once installed, setup the configuration in the <code>~/.config/spotifyd/spotifyd.conf</code>. You can see mine on <a href="https://github.com/GChalony/MeloBoxhttps://github.com/GChalony/MeloBox">my repo</a>.</p>
+<p>When all that is done, you should be able to run it with</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ spotifyd --no-daemon
+</span></span><span style="display:flex;"><span>Loading config from <span style="color:#e6db74">&#34;/home/pi/.config/spotifyd/spotifyd.conf&#34;</span>
+</span></span><span style="display:flex;"><span>No proxy specified
+</span></span><span style="display:flex;"><span>Using software volume controller.
+</span></span><span style="display:flex;"><span>Connecting to AP <span style="color:#e6db74">&#34;ap.spotify.com:443&#34;</span>
+</span></span><span style="display:flex;"><span>Authenticated as <span style="color:#e6db74">&#34;....&#34;</span> !
+</span></span><span style="display:flex;"><span>Country: <span style="color:#e6db74">&#34;FR&#34;</span>
+</span></span><span style="display:flex;"><span>Using Alsa sink with format: S16
+</span></span></code></pre></div><p>If you have another device (for example a phone) connected on the same network, you should now see this as an available player in Spotify&rsquo;s app. Spotify uses <a href="https://flylib.com/books/en/2.94.1.16/1/">ZeroConf</a> under the hood to broadcast itself to all others on the network, which is pretty convenient. If you select this device, you should be able to play any song directly on the Pi. Congratulations, you got yourself a network speaker!</p>
+<p>That&rsquo;s nice and all, but we want to be able to decide (programmatically) which song to play. That again needs to go through spotify&rsquo;s servers, and can be done with the <a href="https://developer.spotify.com/documentation/web-api/">Spotify Web API</a>. It&rsquo;s a bit annoying that we can&rsquo;t locally control the player, but it makes sense for spotify that it should be an intermediary.<br>
+I won&rsquo;t present the API in details, the documentation is really good and should be enough. However, rather than using the API directly (which includes all kinds of credentials stuff), there&rsquo;s a nice cli program that can be useful, <a href="https://github.com/ledesmablt/spotify-cli">spotify-cli</a>.<br>
+Once install, you can</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># List available spotify devices</span>
+</span></span><span style="display:flex;"><span>$ spotify devices -v
+</span></span><span style="display:flex;"><span> * RaspeberryPi
+</span></span><span style="display:flex;"><span> MyPhone
+</span></span><span style="display:flex;"><span> ...
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Play a music</span>
+</span></span><span style="display:flex;"><span>$ spotify play black summer
+</span></span><span style="display:flex;"><span>Playing: Black Summer
+</span></span><span style="display:flex;"><span>         Red Hot Chili Peppers - Black Summer
+</span></span></code></pre></div><p>Rather than identifying songs with their name, which is annoying and sometimes ambiguous, songs, tracks and playlists are identified with Spotify URI. Here&rsquo;s <a href="https://community.spotify.com/t5/FAQs/What-s-a-Spotify-URI/ta-p/919201">how to find the URI of a track</a>.</p>
+<p>We can then do</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ spotify play --uri spotify:album:5JY3b9cELQsoG7D5TJMOgw
+</span></span></code></pre></div><p>Hooray!</p>
+<p>MPRIS</p>
 <p>We can now play a playlist, track or album with</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>spotify play --uri ...
 </span></span></code></pre></div><p>Now comes the harder part : NFC.
@@ -261,9 +332,11 @@ Pinout</p>
 </span></span></code></pre></div><p>Making a daemon
 systemd
 system dbus</p>
-<p>Ideas for later optimisations
-Owning the NFC code
-Interrupt</p>
+<p>Ideas for later optimisations</p>
+<ul>
+<li>Owning the NFC code</li>
+<li>Interrupt</li>
+</ul>
 <h3 id="nfc">NFC</h3>
 <p>First, we need to communicate which music (album, playlist or track) using NFC. Near Field Communication is pretty complicated, especially because there are a lot of different standards, but the basic principal is quite simple :</p>
 <ul>

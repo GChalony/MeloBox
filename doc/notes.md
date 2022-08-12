@@ -122,3 +122,8 @@ printf "[connection]\nwifi.mac-address-randomization=1\n\n[device]\nwifi.scan-ra
  - Jimmy Hendrix
  - Beatles
  - The Police
+
+# MPRIS
+[dbus and python tutorial](https://amish.naidu.dev/blog/dbus/#mpris-spec)
+[official spec](https://specifications.freedesktop.org/mpris-spec/latest/)
+[spotifyd branch for system dbus](https://github.com/Spotifyd/spotifyd/issues/244)
