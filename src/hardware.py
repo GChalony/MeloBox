@@ -34,8 +34,8 @@ class Button:
         self.invoke_callbacks(callback_list)
     
     def invoke_callbacks(self, callback_list):
-        print("Invoking callbacks", len(callback_list))
         for callback in callback_list:
+            print("Invoking callback", callback.__name__)
             callback()
 
     
