@@ -1,0 +1,6 @@
+baseURL = 'https://gchalony.github.io/MeloBox/'
+languageCode = 'en-us'
+
+title = 'MelodyBox - an NFC Spotify player'
+
+theme = 'beautifulhugo'
