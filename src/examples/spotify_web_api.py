@@ -5,30 +5,39 @@ CLIENT_SECRET = "4f6f337860c241bf9c502280927fa226"
 
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 
-auth_response = requests.post(AUTH_URL, {
-    'grant_type': 'client_credentials',
-    'client_id': CLIENT_ID,
-    'client_secret': CLIENT_SECRET,
-})
 
-# convert the response to JSON
-auth_response_data = auth_response.json()
+"""Client credentials is limited to public endpoint and can't access user data. """
+def client_credentials_demo():
+    auth_response = requests.post(AUTH_URL, {
+        'grant_type': 'client_credentials',
+        'client_id': CLIENT_ID,
+        'client_secret': CLIENT_SECRET,
+    })
 
-# save the access token
-access_token = auth_response_data['access_token']
+    # convert the response to JSON
+    auth_response_data = auth_response.json()
 
-print(auth_response_data)
+    # save the access token
+    access_token = auth_response_data['access_token']
 
-headers = {
-    'Authorization': 'Bearer {token}'.format(token=access_token)
-}
+    print(auth_response_data)
 
-BASE_URL = 'https://api.spotify.com/v1/'
+    headers = {
+        'Authorization': 'Bearer {token}'.format(token=access_token)
+    }
 
-# Track ID from the URI
-track_id = '6y0igZArWVi6Iz0rj35c1Y'
+    BASE_URL = 'https://api.spotify.com/v1/'
 
-# actual GET request with proper header
-r = requests.get(BASE_URL + 'audio-features/' + track_id, headers=headers)
+    # Track ID from the URI
+    track_id = '6y0igZArWVi6Iz0rj35c1Y'
 
-print(r.json())
+    # actual GET request with proper header
+    r = requests.get(BASE_URL + 'audio-features/' + track_id, headers=headers)
+
+    print(r.json())
+
+
+def authorization_demo():
+
+    # List available devices
+    print(requests.get("https://api.spotify.com/v1/me/player/devices", headers=headers).json())
