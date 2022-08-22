@@ -60,7 +60,7 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
   "headline": "The MelodyBox",
   "description" : "The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :\n a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.\nWhat is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn\u0026rsquo;t intefere with the radiowaves used to read it.",
   "inLanguage" : "en",
-  "wordCount":  1996 ,
+  "wordCount":  2228 ,
   "datePublished" : "2022-05-23T22:58:14",
   "dateModified" : "2022-05-23T22:58:14",
   "image" : "https:\/\/gchalony.github.io\/MeloBox\/",
@@ -230,6 +230,26 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
 <h2 id="final-result">Final result</h2>
 <p>Here&rsquo;s a demo of the result.</p>
 <p>Freddy Mercury plays Queen music. The buttons can be used to pause/play, go to the next or the previous music. LEDs indicate whether a tag is detected or not, when a button is pressed etc&hellip;</p>
+<div>
+    <h2>Table Of Contents</h2>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#final-result">Final result</a></li>
+    <li><a href="#how-it-works">How it works</a>
+      <ul>
+        <li><a href="#playing-sound">Playing sound</a></li>
+        <li><a href="#sound-architecture-in-linux">Sound architecture in linux</a></li>
+        <li><a href="#playing-with-spotify">Playing with Spotify</a></li>
+        <li><a href="#nfc">NFC</a></li>
+        <li><a href="#making-a-box">Making a box</a></li>
+      </ul>
+    </li>
+    <li><a href="#final-thoughts">Final thoughts</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ul>
+</nav>
+</div>
+
 <h2 id="how-it-works">How it works</h2>
 <p>Alright, we know what we want to do, let&rsquo;s build it.</p>
 <p>The first thing we need is to be able to play music.</p>
@@ -289,16 +309,16 @@ Once installed, setup the configuration in the <code>~/.config/spotifyd/spotifyd
 </span></span><span style="display:flex;"><span>Country: <span style="color:#e6db74">&#34;FR&#34;</span>
 </span></span><span style="display:flex;"><span>Using Alsa sink with format: S16
 </span></span></code></pre></div><p>If you have another device (for example a phone) connected on the same network, you should now see this as an available player in Spotify&rsquo;s app. Spotify uses <a href="https://flylib.com/books/en/2.94.1.16/1/">ZeroConf</a> under the hood to broadcast itself to all others on the network, which is pretty convenient. If you select this device, you should be able to play any song directly on the Pi. Congratulations, you got yourself a network speaker!</p>
-<p>That&rsquo;s nice and all, but we want to be able to decide (programmatically) which song to play. That again needs to go through spotify&rsquo;s servers, and can be done with the <a href="https://developer.spotify.com/documentation/web-api/">Spotify Web API</a>. It&rsquo;s a bit annoying that we can&rsquo;t locally control the player, but it makes sense for spotify that it should be an intermediary.</p>
-<p>I won&rsquo;t present the API in details, the documentation is really good and should be enough. Assuming we have an access toeken stored in <code>ACCESS_TOKEN</code> (we&rsquo;ll get back to it), we can:</p>
+<p>That&rsquo;s nice and all, but we want to be able to decide (programmatically) which song to play. That again needs to go through spotify&rsquo;s servers, and can be done with the <a href="https://developer.spotify.com/documentation/web-api/">Spotify Web API</a>.</p>
+<p>I won&rsquo;t present the API in details, the documentation is really good and should be enough. Assuming we have an access token stored in <code>ACCESS_TOKEN</code> (we&rsquo;ll get back to it), we can:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># Get some info about current playback</span>
-</span></span><span style="display:flex;"><span>$ curl https://api.spotify.com/v1/me/player --header <span style="color:#e6db74">&#34;Authorization: Bearer </span>$ACCESS_TOKEN<span style="color:#e6db74">&#34;</span> --header <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span>
+</span></span><span style="display:flex;"><span>$ curl https://api.spotify.com/v1/me/player <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --header <span style="color:#e6db74">&#34;Authorization: Bearer </span>$ACCESS_TOKEN<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --header <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;device&#34;</span> : <span style="color:#f92672">{</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;id&#34;</span> : <span style="color:#e6db74">&#34;f77ec2bda9ef8416d06f174358c03aaccbbd77e9&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;is_active&#34;</span> : true,
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;is_private_session&#34;</span> : false,
-</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;is_restricted&#34;</span> : false,
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;name&#34;</span> : <span style="color:#e6db74">&#34;RaspberryPi&#34;</span>,   &lt;-- The spotifyd player
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;Speaker&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;volume_percent&#34;</span> : <span style="color:#ae81ff">89</span>
@@ -307,24 +327,19 @@ Once installed, setup the configuration in the <code>~/.config/spotifyd/spotifyd
 </span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;is_playing&#34;</span> : true
 </span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># Pause playback</span>
-</span></span><span style="display:flex;"><span>$ curl --request PUT https://api.spotify.com/v1/me/player/pause --header <span style="color:#e6db74">&#34;Authorization: Bearer </span>$TOKEN<span style="color:#e6db74">&#34;</span> --header <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span>
+</span></span><span style="display:flex;"><span>$ curl --request PUT https://api.spotify.com/v1/me/player/pause <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --header <span style="color:#e6db74">&#34;Authorization: Bearer </span>$TOKEN<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --header <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e"># Play an album</span>
-</span></span><span style="display:flex;"><span>$ curl --request PUT https://api.spotify.com/v1/me/player/play --header <span style="color:#e6db74">&#34;Authorization: Bearer </span>$TOKEN<span style="color:#e6db74">&#34;</span> --header <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span> --data <span style="color:#e6db74">&#39;{&#34;context_uri&#34;: &#34;spotify:album:5JY3b9cELQsoG7D5TJMOgw&#34;}&#39;</span>
+</span></span><span style="display:flex;"><span>$ curl --request PUT https://api.spotify.com/v1/me/player/play <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --header <span style="color:#e6db74">&#34;Authorization: Bearer </span>$TOKEN<span style="color:#e6db74">&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --header <span style="color:#e6db74">&#39;Content-Type: application/json&#39;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --data <span style="color:#e6db74">&#39;{&#34;context_uri&#34;: &#34;spotify:album:5JY3b9cELQsoG7D5TJMOgw&#34;}&#39;</span>
 </span></span></code></pre></div><blockquote>
 <p>Rather than identifying songs with their name, which is annoying and sometimes ambiguous, songs, tracks and playlists are identified with Spotify URI. Here&rsquo;s <a href="https://community.spotify.com/t5/FAQs/What-s-a-Spotify-URI/ta-p/919201">how to find the URI of a track</a>.</p>
 </blockquote>
 <p>To avoid writing the requests manually, there&rsquo;s a nice cli program that can be useful, <a href="https://github.com/ledesmablt/spotify-cli">spotify-cli</a>. This tool is really nice, especially because the developper made a nice little server to handle authentication. Without getting into too much details (read <a href="https://developer.spotify.com/documentation/general/guides/authorization/code-flow/">Spotify&rsquo;s Authorization Code Flow</a>), I decided it&rsquo;d be much simpler to use <code>spotify-cli</code>&rsquo;s refresh token, which is stored in <code>~/.config/spotify-cli/credentials.json</code>, which means we can simply use it to get an access token when need and that&rsquo;s it.</p>
-<p>Spotify-cli can also directly be used to control playback</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># List available spotify devices</span>
-</span></span><span style="display:flex;"><span>$ spotify devices -v
-</span></span><span style="display:flex;"><span> * RaspeberryPi
-</span></span><span style="display:flex;"><span> MyPhone
-</span></span><span style="display:flex;"><span> ...
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Play a music</span>
-</span></span><span style="display:flex;"><span>$ spotify play black summer
-</span></span><span style="display:flex;"><span>Playing: Black Summer
-</span></span><span style="display:flex;"><span>         Red Hot Chili Peppers - Black Summer
-</span></span></code></pre></div><p>We can then do</p>
+<p>To sum up, we&rsquo;re now able to play a desired music / album either through the API or with:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ spotify play --uri spotify:album:5JY3b9cELQsoG7D5TJMOgw
 </span></span></code></pre></div><p>Hooray!</p>
 <p>However, we can still do better. I was frustrated that we had to use the API even to just pause the song or skip to the next one, and then I found <a href="https://specifications.freedesktop.org/mpris-spec/latest/">MPRIS</a>. MPRIS is a protocol that works over <a href="https://dbus.freedesktop.org/doc/dbus-specification.html">DBUS</a> and allows processes to control media players. That&rsquo;s a lot of new words, so let&rsquo;s split it up.</p>
@@ -361,15 +376,33 @@ Thanksfully, <code>spotifyd</code> supports MPRIS (with the <code>use_mpris = tr
 <p>We can use this memory to write a URI identifying which music we want to play, for example a Spotify URI : <code>spotify:album:5JY3b9cELQsoG7D5TJMOgw</code>. I use NFC Tool to flash the URI from a smartphone equiped with NFC. I used NTAG210u as they are cheap and small enough to be embeded in almost any object.</p>
 <p>The reading is done with a PN532 chip, connected to a RaspberryPi over I2C. I initially chose I2C because it allows to use multiple readers on the same pins, and even though I ended using only one reader, I stuck to this choice.</p>
 <p><img src="/MeloBox/pn532.jpg" alt="pn532"></p>
-<p>I struggled quite a lot to use the sensor, as I&rsquo;ve found that there are not so many tools to use NFC in linux. The reference is <code>libnfc</code>, which is a librairie to use NFC, and also provides some tool to work with it. However, documentation is pretty poor and the librairie seems quite old. I&rsquo;ve use <code>nfc-poll</code> quite a lot to wait for a tag to be detected.<br>
-<code>libfreefare</code> is another library which build on top of it to provide more convenient APIs for MIFARE cards.<br>
-I use <code>nfc-mfultralight</code> to read the content of the memory and parse it. I unfortunately didn&rsquo;t manage to use any other tool like <code>ntag-detect</code> or use the <code>pn532pi</code> python package, but that&rsquo;s enough so far:</p>
+<p>The base library to handle NFC in linux is <a href="https://github.com/nfc-tools/libnfc">libnfc</a>. <a href="https://github.com/nfc-tools/libfreefare">libfree</a> builds on top of it to provide more convenient APIs and handle some custom features. Both come with a set of cli utilities to use nfc:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># Detect when a tag is moved close to the sensor</span>
 </span></span><span style="display:flex;"><span>$ nfc-poll
 </span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># We can use &amp;1 to redirect nfc to stdout rather than to a file</span>
-</span></span><span style="display:flex;"><span>$ nfc-mfultralight r <span style="color:#e6db74">&#34;&amp;1&#34;</span>  
-</span></span></code></pre></div><p><img src="/MeloBox/box.svg" alt="box"></p>
+</span></span><span style="display:flex;"><span>$ nfc-mfultralight r card.dump  
+</span></span></code></pre></div><p>The file written by <code>nfc-mfultralight</code> contains a dump of the memory stored in the tag, and can then be read:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ hexdump card.dump -C
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00000000</span>  <span style="color:#ae81ff">04</span> <span style="color:#ae81ff">71</span> 9b <span style="color:#ae81ff">66</span> 0a <span style="color:#ae81ff">92</span> <span style="color:#ae81ff">72</span> <span style="color:#ae81ff">81</span>  6b <span style="color:#ae81ff">48</span> <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">00</span> e1 <span style="color:#ae81ff">10</span> <span style="color:#ae81ff">06</span> <span style="color:#ae81ff">00</span>  |.q.f..r.kH......|
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00000010</span>  <span style="color:#ae81ff">03</span> 2b d1 <span style="color:#ae81ff">01</span> <span style="color:#ae81ff">27</span> <span style="color:#ae81ff">54</span> <span style="color:#ae81ff">02</span> <span style="color:#ae81ff">65</span>  6e <span style="color:#ae81ff">73</span> <span style="color:#ae81ff">70</span> 6f <span style="color:#ae81ff">74</span> <span style="color:#ae81ff">69</span> <span style="color:#ae81ff">66</span> <span style="color:#ae81ff">79</span>  |.+..<span style="color:#960050;background-color:#1e0010">&#39;</span>T.enspotify|
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00000020</span>  3a <span style="color:#ae81ff">61</span> 6c <span style="color:#ae81ff">62</span> <span style="color:#ae81ff">75</span> 6d 3a <span style="color:#ae81ff">32</span>  <span style="color:#ae81ff">72</span> <span style="color:#ae81ff">43</span> <span style="color:#ae81ff">53</span> <span style="color:#ae81ff">36</span> <span style="color:#ae81ff">58</span> <span style="color:#ae81ff">77</span> <span style="color:#ae81ff">78</span> <span style="color:#ae81ff">33</span>  |:album:2rCS6Xwx3|
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">00000030</span>  <span style="color:#ae81ff">32</span> <span style="color:#ae81ff">56</span> <span style="color:#ae81ff">32</span> <span style="color:#ae81ff">37</span> <span style="color:#ae81ff">70</span> <span style="color:#ae81ff">76</span> <span style="color:#ae81ff">67</span> <span style="color:#ae81ff">46</span>  7a 4c 7a 6c <span style="color:#ae81ff">54</span> fe <span style="color:#ae81ff">00</span> <span style="color:#ae81ff">00</span>  |2V27pvgFzLzlT...|
+</span></span></code></pre></div><p>We can then easily parse it to get the spotify uri. There probably is a specification concerning the format of the file (<a href="https://learn.gototags.com/nfc/ndef">NFC Data Exchange Format - NDEF</a> and <a href="https://www.d-logic.com/knowledge_base/mifare-classic-and-mifare-plus-ic-memory-mapping-of-ndef-data/">MAD</a>) but I&rsquo;m just basing it on the file I have at hand.</p>
+<p>And that&rsquo;s it! We now have all the tools to do what we want: play the music defined by the tag. In pseudo code, here&rsquo;s what i looks like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">while</span> wait_for_tag():
+</span></span><span style="display:flex;"><span>  spotify_uri <span style="color:#f92672">=</span> read_tag_uri()
+</span></span><span style="display:flex;"><span>  spotify<span style="color:#f92672">.</span>play(spotify_uri)
+</span></span></code></pre></div><p>We now have a functioning prototype :)</p>
+<h3 id="making-a-box">Making a box</h3>
+<p>Now that we&rsquo;ve done all that, we need to make a nice little box and some user interface to avoid having to start it from SSH every time.</p>
+<p>As always, the devil is in the details, but I won&rsquo;t mention it all here - the article is already too long as it is.</p>
+<p>I came up with this design.</p>
+<p><img src="/MeloBox/box-3d.png" alt="box"></p>
+<p>The power button has an led indicator to show when the Pi is turned on. Three buttons control the playback (previous, play/pause and next). A slot accepts a floppy disk, with NFC tags. Otherwise, a figurine (or really any object) with a tag can be put above. A little RGB-LED on the side gives some feedback on what is happening (red when no tag, blue when one is detected, green when a button is pressed).</p>
+<p>I used <code>systemd</code> to autostart the program when the Pi is turned on. It&rsquo;s also really useful to gather the logs, or to automatically restart it when it fails.</p>
+<h2 id="final-thoughts">Final thoughts</h2>
+<h2 id="sources">Sources</h2>
+<p><a href="https://embeddedcomputing.com/technology/open-source/development-kits/raspberry-pi-power-up-and-shutdown-with-a-physical-button">Adding a power button with LED indicator</a></p>
 
 
         

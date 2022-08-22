@@ -3,7 +3,6 @@ title: "The MelodyBox"
 date: 2022-05-23T22:58:14+02:00
 ---
 
-
 The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :
  - a physical object that can identifying music
  - a reader which can read the music to play from the object and play it 
@@ -20,6 +19,8 @@ Here's a demo of the result.
 
 Freddy Mercury plays Queen music. The buttons can be used to pause/play, go to the next or the previous music. LEDs indicate whether a tag is detected or not, when a button is pressed etc...
 
+{{< toc >}}
+
 ## How it works
 
 Alright, we know what we want to do, let's build it.
@@ -29,7 +30,7 @@ The first thing we need is to be able to play music.
 We'll be using a RaspberryPi for this project. Indeed, we need a small enough board that it'll fit in a box, and it needs some pretty advanced features like connecting to spotify over the network or connecting to a NFC sensor. We could usea microcontroller, but it'd be so much work to add a network chip and all, while we get all that for free on a Pi.  
 Also, as it's linux, we'll be able to use all the awesome tools that other people built for us!
 
-> Disclaimer: we'll go through quite a few topics here, but I am by no means an expert. And though I'll try to give an overview of the technologies we'll manipulate, I'm more interested in _how to use them_ rather than _how they work_. I've left tons of ressources at the end if you want to go deeper.
+_**Disclaimer**: we'll go through quite a few topics here, but I am by no means an expert. And though I'll try to give an overview of the technologies we'll manipulate, I'm more interested in _how to use them_ rather than _how they work_. I've left tons of ressources at the end if you want to go deeper._
 
 ### Playing sound
 
@@ -38,7 +39,7 @@ First of, we need speakers and to connect them to a Pi in a way that sound can b
  - the amplifier has a power input (sector) and can take several input types, both digital and analogic
  - the Pi's internal sound card convert digital sound to analogic, which is then forwarded to the ampli over a jack port
 
-_scheme_
+![speakers wiring](/MeloBox/schema_speakers.png)
 
  To test the setup, just run `speaker-test` and check that the speakers are playing a nice white noise (perfect to go to sleep).
 
@@ -106,75 +107,81 @@ Using Alsa sink with format: S16
 
 If you have another device (for example a phone) connected on the same network, you should now see this as an available player in Spotify's app. Spotify uses [ZeroConf](https://flylib.com/books/en/2.94.1.16/1/) under the hood to broadcast itself to all others on the network, which is pretty convenient. If you select this device, you should be able to play any song directly on the Pi. Congratulations, you got yourself a network speaker!
 
-That's nice and all, but we want to be able to decide (programmatically) which song to play. That again needs to go through spotify's servers, and can be done with the [Spotify Web API](https://developer.spotify.com/documentation/web-api/). It's a bit annoying that we can't locally control the player, but it makes sense for spotify that it should be an intermediary.  
-I won't present the API in details, the documentation is really good and should be enough. However, rather than using the API directly (which includes all kinds of credentials stuff), there's a nice cli program that can be useful, [spotify-cli](https://github.com/ledesmablt/spotify-cli).  
-Once install, you can
+That's nice and all, but we want to be able to decide (programmatically) which song to play. That again needs to go through spotify's servers, and can be done with the [Spotify Web API](https://developer.spotify.com/documentation/web-api/). 
+
+I won't present the API in details, the documentation is really good and should be enough. Assuming we have an access token stored in `ACCESS_TOKEN` (we'll get back to it), we can:
+
 ```shell
-# List available spotify devices
-$ spotify devices -v
- * RaspeberryPi
- MyPhone
- ...
-# Play a music
-$ spotify play black summer
-Playing: Black Summer
-         Red Hot Chili Peppers - Black Summer
+# Get some info about current playback
+$ curl https://api.spotify.com/v1/me/player \
+  --header "Authorization: Bearer $ACCESS_TOKEN" \
+  --header 'Content-Type: application/json'
+{
+  "device" : {
+    "id" : "f77ec2bda9ef8416d06f174358c03aaccbbd77e9",
+    "is_active" : true,
+    "name" : "RaspberryPi",   <-- The spotifyd player
+    "type" : "Speaker",
+    "volume_percent" : 89
+  },
+  ...
+  "is_playing" : true
+}
+# Pause playback
+$ curl --request PUT https://api.spotify.com/v1/me/player/pause \
+  --header "Authorization: Bearer $TOKEN" \
+  --header 'Content-Type: application/json'
+# Play an album
+$ curl --request PUT https://api.spotify.com/v1/me/player/play \
+  --header "Authorization: Bearer $TOKEN" \
+  --header 'Content-Type: application/json' \
+  --data '{"context_uri": "spotify:album:5JY3b9cELQsoG7D5TJMOgw"}'
 ```
 
-Rather than identifying songs with their name, which is annoying and sometimes ambiguous, songs, tracks and playlists are identified with Spotify URI. Here's [how to find the URI of a track](https://community.spotify.com/t5/FAQs/What-s-a-Spotify-URI/ta-p/919201).
 
-We can then do
+> Rather than identifying songs with their name, which is annoying and sometimes ambiguous, songs, tracks and playlists are identified with Spotify URI. Here's [how to find the URI of a track](https://community.spotify.com/t5/FAQs/What-s-a-Spotify-URI/ta-p/919201).
+
+
+To avoid writing the requests manually, there's a nice cli program that can be useful, [spotify-cli](https://github.com/ledesmablt/spotify-cli). This tool is really nice, especially because the developper made a nice little server to handle authentication. Without getting into too much details (read [Spotify's Authorization Code Flow](https://developer.spotify.com/documentation/general/guides/authorization/code-flow/)), I decided it'd be much simpler to use `spotify-cli`'s refresh token, which is stored in `~/.config/spotify-cli/credentials.json`, which means we can simply use it to get an access token when need and that's it.
+
+
+To sum up, we're now able to play a desired music / album either through the API or with:
 ```shell
 $ spotify play --uri spotify:album:5JY3b9cELQsoG7D5TJMOgw
 ```
 Hooray!
 
+However, we can still do better. I was frustrated that we had to use the API even to just pause the song or skip to the next one, and then I found [MPRIS](https://specifications.freedesktop.org/mpris-spec/latest/). MPRIS is a protocol that works over [DBUS](https://dbus.freedesktop.org/doc/dbus-specification.html) and allows processes to control media players. That's a lot of new words, so let's split it up.
 
-
-MPRIS
-
-We can now play a playlist, track or album with
+D-BUS is a way for processes to communicate between each other. This can be useful for lots of different reasons, for example is a process wishes to expose commands to control it. You can view the traffic over dbus with 
 ```shell
-spotify play --uri ...
+$ dbus-monitor
 ```
+You'll see there's all kind of communication between applications.
 
-Now comes the harder part : NFC.
-We need :
- - to be able to detect when a tag is approached
- - to read the URI stored in the memory
- - detect when it is removed
-
-Basic NFC concept
-PN532 + NTAG210u
-
-
-Putting it all together.
-
-Box with buttons, leds.
-    Turn on/off RaspberryPi.
-    Buttons with interrupt
-    Led for feedback
-    Pinout
+MPRIS (Media Player Remote Interfacing Specification) is a protocol that builds on top of DBUS, with which media playing applications (like your music player, Netflix or VLC) can allow other applications to control them.  
+Thanksfully, `spotifyd` supports MPRIS (with the `use_mpris = true` set in the config file). That means we can do
 
 ```python
-def run():
-    # Run the music server
-    spotify.run()
-    nfc.wait_for_tag()
+>>> bus = dbus.SystemBus()  # communicate with spotifyd over system bus
+>>> player = bus.get_object("org.mpris.MediaPlayer2.spotifyd", "/org/mpris/MediaPlayer2")
+>>> interface = dbus.Interface(self.player, dbus_interface='org.mpris.MediaPlayer2.Player')
+
+# Play a URI
+>>> interface.OpenUri("spotify:album:5JY3b9cELQsoG7D5TJMOgw")
+# Toggle play / pause
+>>> interface.PlayPause()
+# Skip to next song
+>>> interface.Next()
 ```
 
-Making a daemon
-    systemd
-    system dbus
+Nice ! As this communicates directly between our program and `spotifyd`, there's no latency due to communication with spotify.
 
-Ideas for later optimisations
- - Owning the NFC code
- - Interrupt
-
+We now know how to programmatically control the music being played with spotify. That's already pretty cool, but we're missing the most important: NFC!
 
 ### NFC
 
-First, we need to communicate which music (album, playlist or track) using NFC. Near Field Communication is pretty complicated, especially because there are a lot of different standards, but the basic principal is quite simple :
+Near Field Communication is pretty complicated, especially because there are a lot of different standards, but the basic principal is quite simple :
  - a tag host some kind of memory (up to a few kB depending on the tag's type)
  - a reader creates a magnoeletric field near the tags
  - this induces current in the tag, which can use it to power its circuitry
@@ -186,14 +193,56 @@ First, we need to communicate which music (album, playlist or track) using NFC. 
 
  We can use this memory to write a URI identifying which music we want to play, for example a Spotify URI : `spotify:album:5JY3b9cELQsoG7D5TJMOgw`. I use NFC Tool to flash the URI from a smartphone equiped with NFC. I used NTAG210u as they are cheap and small enough to be embeded in almost any object.
 
-The reading is done with a PN532 chip, connected to a RaspberryPi over I2C. I initially chose I2C because it allows to plus multiple readers on the same pins, and even though I ended using only one reader, I stuck to this choice.
+The reading is done with a PN532 chip, connected to a RaspberryPi over I2C. I initially chose I2C because it allows to use multiple readers on the same pins, and even though I ended using only one reader, I stuck to this choice.
 
-I struggled quite a lot to use the sensor, as I've found that there are not so many tools to use NFC in linux. The reference is `libnfc`, which is a librairie to use NFC, and also provides some tool to work with it. I've use `nfc-poll` quite a lot to wait for a tag to be detected.  
-`libfreefare` is another library which build on top of it to provide more convenient APIs for MIFARE cards.  
-I use `nfc-mfultralight` to read the content of the memory and parse it. I unfortunately didn't manage to use any other tool like `ntag-detect` or use the `pn532pi` python package.
+![pn532](/MeloBox/pn532.jpg)
+
+The base library to handle NFC in linux is [libnfc](https://github.com/nfc-tools/libnfc). [libfree](https://github.com/nfc-tools/libfreefare) builds on top of it to provide more convenient APIs and handle some custom features. Both come with a set of cli utilities to use nfc:
+```shell
+# Detect when a tag is moved close to the sensor
+$ nfc-poll
+...
+$ nfc-mfultralight r card.dump  
+```
+The file written by `nfc-mfultralight` contains a dump of the memory stored in the tag, and can then be read:
+```shell
+$ hexdump card.dump -C
+00000000  04 71 9b 66 0a 92 72 81  6b 48 00 00 e1 10 06 00  |.q.f..r.kH......|
+00000010  03 2b d1 01 27 54 02 65  6e 73 70 6f 74 69 66 79  |.+..'T.enspotify|
+00000020  3a 61 6c 62 75 6d 3a 32  72 43 53 36 58 77 78 33  |:album:2rCS6Xwx3|
+00000030  32 56 32 37 70 76 67 46  7a 4c 7a 6c 54 fe 00 00  |2V27pvgFzLzlT...|
+```
+We can then easily parse it to get the spotify uri. There probably is a specification concerning the format of the file ([NFC Data Exchange Format - NDEF](https://learn.gototags.com/nfc/ndef) and [MAD](https://www.d-logic.com/knowledge_base/mifare-classic-and-mifare-plus-ic-memory-mapping-of-ndef-data/)) but I'm just basing it on the file I have at hand. 
+
+And that's it! We now have all the tools to do what we want: play the music defined by the tag. In pseudo code, here's what i looks like:
+
+```python
+while wait_for_tag():
+  spotify_uri = read_tag_uri()
+  spotify.play(spotify_uri)
+```
+
+We now have a functioning prototype :) 
+
+### Making a box
+
+Now that we've done all that, we need to make a nice little box and some user interface to avoid having to start it from SSH every time.
+
+As always, the devil is in the details, but I won't mention it all here - the article is already too long as it is.
+
+I came up with this design.
+
+![box](/MeloBox/box-3d.png)
+
+The power button has an led indicator to show when the Pi is turned on. Three buttons control the playback (previous, play/pause and next). A slot accepts a floppy disk, with NFC tags. Otherwise, a figurine (or really any object) with a tag can be put above. A little RGB-LED on the side gives some feedback on what is happening (red when no tag, blue when one is detected, green when a button is pressed).
+
+I used `systemd` to autostart the program when the Pi is turned on. It's also really useful to gather the logs, or to automatically restart it when it fails.
+
+## Final thoughts
 
 
-![pinout](/MeloBox/rpi_pins.png)
 
-![box](/MeloBox/box.svg)
 
+## Sources
+
+[Adding a power button with LED indicator](https://embeddedcomputing.com/technology/open-source/development-kits/raspberry-pi-power-up-and-shutdown-with-a-physical-button)
