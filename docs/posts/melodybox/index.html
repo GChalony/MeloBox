@@ -60,7 +60,7 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
   "headline": "The MelodyBox",
   "description" : "The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :\n a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.\nWhat is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn\u0026rsquo;t intefere with the radiowaves used to read it.",
   "inLanguage" : "en",
-  "wordCount":  2228 ,
+  "wordCount":  2243 ,
   "datePublished" : "2022-05-23T22:58:14",
   "dateModified" : "2022-05-23T22:58:14",
   "image" : "https:\/\/gchalony.github.io\/MeloBox\/",
@@ -219,7 +219,8 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :</p>
+        <p><img src="/MeloBox/front_photo.png" alt="MEL"></p>
+<p>The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :</p>
 <ul>
 <li>a physical object that can identifying music</li>
 <li>a reader which can read the music to play from the object and play it</li>
@@ -229,6 +230,7 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
 <p>The music is played through the spotify API, which has several advantages: any music on Spotify can be played (without having to download it locally first), we can create custom playlists to play and the playback can be controled from other Spotify devices, for example to change the volume or pause.</p>
 <h2 id="final-result">Final result</h2>
 <p>Here&rsquo;s a demo of the result.</p>
+<p><img src="/MeloBox/demo.gif" alt="Video demo"></p>
 <p>Freddy Mercury plays Queen music. The buttons can be used to pause/play, go to the next or the previous music. LEDs indicate whether a tag is detected or not, when a button is pressed etc&hellip;</p>
 <div>
     <h2>Table Of Contents</h2>
@@ -397,10 +399,26 @@ Thanksfully, <code>spotifyd</code> supports MPRIS (with the <code>use_mpris = tr
 <p>Now that we&rsquo;ve done all that, we need to make a nice little box and some user interface to avoid having to start it from SSH every time.</p>
 <p>As always, the devil is in the details, but I won&rsquo;t mention it all here - the article is already too long as it is.</p>
 <p>I came up with this design.</p>
-<p><img src="/MeloBox/box-3d.png" alt="box"></p>
+<p><div class="splitbox"><div class="left">
+
+<img src="/MeloBox/box-3d.png" alt="box">
+</div><div class="right">
+
+<img src="/MeloBox/box-real.jpg" alt="box">
+</div><div style="clear:both"></div></div>
+</p>
 <p>The power button has an led indicator to show when the Pi is turned on. Three buttons control the playback (previous, play/pause and next). A slot accepts a floppy disk, with NFC tags. Otherwise, a figurine (or really any object) with a tag can be put above. A little RGB-LED on the side gives some feedback on what is happening (red when no tag, blue when one is detected, green when a button is pressed).</p>
+<p><img src="/MeloBox/open_box.jpg" alt="box">
+<em>The mess inside</em></p>
 <p>I used <code>systemd</code> to autostart the program when the Pi is turned on. It&rsquo;s also really useful to gather the logs, or to automatically restart it when it fails.</p>
 <h2 id="final-thoughts">Final thoughts</h2>
+<ul>
+<li>overheating</li>
+<li>NFC manual implementation</li>
+<li>interrupt</li>
+<li>power on / off</li>
+<li>write in Rust</li>
+</ul>
 <h2 id="sources">Sources</h2>
 <p><a href="https://embeddedcomputing.com/technology/open-source/development-kits/raspberry-pi-power-up-and-shutdown-with-a-physical-button">Adding a power button with LED indicator</a></p>
 

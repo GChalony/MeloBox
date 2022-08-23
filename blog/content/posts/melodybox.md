@@ -3,6 +3,8 @@ title: "The MelodyBox"
 date: 2022-05-23T22:58:14+02:00
 ---
 
+![MEL](/MeloBox/front_photo.png)
+
 The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :
  - a physical object that can identifying music
  - a reader which can read the music to play from the object and play it 
@@ -16,6 +18,8 @@ The music is played through the spotify API, which has several advantages: any m
 ## Final result
 
 Here's a demo of the result.
+
+![Video demo](/MeloBox/demo.gif)
 
 Freddy Mercury plays Queen music. The buttons can be used to pause/play, go to the next or the previous music. LEDs indicate whether a tag is detected or not, when a button is pressed etc...
 
@@ -232,15 +236,26 @@ As always, the devil is in the details, but I won't mention it all here - the ar
 
 I came up with this design.
 
+{{< columns >}}
 ![box](/MeloBox/box-3d.png)
+{{< column >}}
+![box](/MeloBox/box-real.jpg)
+{{< endcolumns >}}
 
 The power button has an led indicator to show when the Pi is turned on. Three buttons control the playback (previous, play/pause and next). A slot accepts a floppy disk, with NFC tags. Otherwise, a figurine (or really any object) with a tag can be put above. A little RGB-LED on the side gives some feedback on what is happening (red when no tag, blue when one is detected, green when a button is pressed).
+
+![box](/MeloBox/open_box.jpg)
+_The mess inside_
 
 I used `systemd` to autostart the program when the Pi is turned on. It's also really useful to gather the logs, or to automatically restart it when it fails.
 
 ## Final thoughts
 
-
+ - overheating
+ - NFC manual implementation
+ - interrupt
+ - power on / off
+ - write in Rust
 
 
 ## Sources
