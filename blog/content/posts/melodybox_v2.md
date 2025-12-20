@@ -54,4 +54,6 @@ The last touch was to buy some better-looking buttons, for a more professional l
 
 ## Conclusion
 
-I'm really happy.
+I'm really happy with this new version, it looks way better and works more reliably. It's always fun to have new people draw there floppy disks and try them out.
+I have some thing that I'd like to work on though, which I'm listing it here so I can remember:
+ - 

@@ -4,7 +4,8 @@
     <title>Tags on MelodyBox - an NFC Spotify player</title>
     <link>https://gchalony.github.io/MeloBox/tags/</link>
     <description>Recent content in Tags on MelodyBox - an NFC Spotify player</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://gchalony.github.io/MeloBox/tags/index.xml" rel="self" type="application/rss+xml" />
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="https://gchalony.github.io/MeloBox/tags/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

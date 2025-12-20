@@ -4,19 +4,23 @@
     <title>Posts on MelodyBox - an NFC Spotify player</title>
     <link>https://gchalony.github.io/MeloBox/posts/</link>
     <description>Recent content in Posts on MelodyBox - an NFC Spotify player</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 23 May 2022 22:58:14 +0200</lastBuildDate><atom:link href="https://gchalony.github.io/MeloBox/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Dec 2025 21:29:14 +0200</lastBuildDate>
+    <atom:link href="https://gchalony.github.io/MeloBox/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The MelodyBox - v2</title>
+      <link>https://gchalony.github.io/MeloBox/posts/melodybox_v2/</link>
+      <pubDate>Sat, 20 Dec 2025 21:29:14 +0200</pubDate>
+      <guid>https://gchalony.github.io/MeloBox/posts/melodybox_v2/</guid>
+      <description>&lt;p&gt;This is the next iteration of the Melodybox, a little box that plays music using floppy disks or pop figurines.&lt;/p&gt;&#xA;&lt;h2 id=&#34;final-result&#34;&gt;Final result&lt;/h2&gt;&#xA;&lt;h2 id=&#34;motivation-why-a-new-one-&#34;&gt;Motivation: why a new one ?&lt;/h2&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve been using the MelodyBox on and off for the last few years, but I kept on having some issues that I couldn&amp;rsquo;t quite solve. It kept going for a while until some day, I decided to drop all the code and start from scratch. I later decide to remake the box, and that&amp;rsquo;s how I arrived to this new version.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>The MelodyBox</title>
       <link>https://gchalony.github.io/MeloBox/posts/melodybox/</link>
       <pubDate>Mon, 23 May 2022 22:58:14 +0200</pubDate>
-      
       <guid>https://gchalony.github.io/MeloBox/posts/melodybox/</guid>
-      <description>The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :
- a physical object that can identifying music a reader which can read the music to play from the object and play it  The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.
-What is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn&amp;rsquo;t intefere with the radiowaves used to read it.</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://gchalony.github.io/MeloBox/front_photo.png&#34; alt=&#34;MEL&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;The MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;a physical object that can identifying music&lt;/li&gt;&#xA;&lt;li&gt;a reader which can read the music to play from the object and play it&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.&lt;/p&gt;&#xA;&lt;p&gt;What is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn&amp;rsquo;t intefere with the radiowaves used to read it. I have used floppy disks, a RubiksCube and Pop! figurines as such vectors.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>
