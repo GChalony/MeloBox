@@ -82,6 +82,10 @@ I did burn on raspberry pi because of a shortcircuit, so I learnt to put lots of
 
 The last touch was to buy some better-looking buttons, for a more professional look. I used a button with an embedded led, to replace the previous setup.
 
+|Lid open|The inside|
+|-|-|
+|![Lid open](/MeloBox/lid_open.jpg) |![Inside the box](/MeloBox/boombox_inside.jpg)|
+
 ## Conclusion
 
 I'm really happy with this new version, it looks way better and works more reliably. It's always fun to have new people draw there floppy disks and try them out.
