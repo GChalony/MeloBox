@@ -71,7 +71,7 @@ What is convenient about this is that the NFC tag can be embeded in almost any k
   "headline": "The MelodyBox",
   "description" : "\nThe MelodyBox is meant to give a physical support to music, as used to exist with vinyls and CDs. This requires two things :\na physical object that can identifying music a reader which can read the music to play from the object and play it The object is an NFC tag, and the reader is an NFC reader coupled with a RasperryPi.\nWhat is convenient about this is that the NFC tag can be embeded in almost any kind of object, as long as it doesn\u0026rsquo;t intefere with the radiowaves used to read it. I have used floppy disks, a RubiksCube and Pop! figurines as such vectors.\n",
   "inLanguage" : "en",
-  "wordCount":  2222 ,
+  "wordCount":  2240 ,
   "datePublished" : "2022-05-23T22:58:14\u002b02:00",
   "dateModified" : "2022-05-23T22:58:14\u002b02:00",
   "image" : "https:\/\/gchalony.github.io\/MeloBox\/",
@@ -260,7 +260,22 @@ a reader which can read the …">
 <p>Here&rsquo;s a demo of the result.</p>
 <p><img src="/MeloBox/demo.gif" alt="Video demo"></p>
 <p>Freddy Mercury plays Queen music. The buttons can be used to pause/play, go to the next or the previous music. LEDs indicate whether a tag is detected or not, when a button is pressed etc&hellip;</p>
-<p>{{ .Page.TableOfContents }}</p>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#final-result">Final result</a></li>
+    <li><a href="#how-it-works">How it works</a>
+      <ul>
+        <li><a href="#playing-sound">Playing sound</a></li>
+        <li><a href="#sound-architecture-in-linux">Sound architecture in linux</a></li>
+        <li><a href="#playing-with-spotify">Playing with Spotify</a></li>
+        <li><a href="#nfc">NFC</a></li>
+        <li><a href="#making-a-box">Making a box</a></li>
+      </ul>
+    </li>
+    <li><a href="#final-thoughts">Final thoughts</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ul>
+</nav>
 <h2 id="how-it-works">How it works</h2>
 <p>Alright, we know what we want to do, let&rsquo;s build it.</p>
 <p>The first thing we need is to be able to play music.</p>
