@@ -23,7 +23,7 @@ Here's a demo of the result.
 
 Freddy Mercury plays Queen music. The buttons can be used to pause/play, go to the next or the previous music. LEDs indicate whether a tag is detected or not, when a button is pressed etc...
 
-{{ .Page.TableOfContents }}
+{{< toc >}}
 
 ## How it works
 
